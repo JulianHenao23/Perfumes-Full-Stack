@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import CardPerfume from "../components/CardPerfume";
 import perfumeService from "../services/perfumeService";
 
-const HomePage = () => {
+  const HomePage = () => {
   const [perfumes, setPerfumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const [search, setSearch] = useState("");
   const fetchPerfumes = async () => {
     try {
       const data = await perfumeService.getAll();
@@ -29,7 +29,7 @@ const HomePage = () => {
     try {
       await perfumeService.delete(id);
       toast.success("Perfume eliminado correctamente");
-      fetchPerfumes(); // recargar la lista
+      fetchPerfumes(); //  esto recargaa la lista
     } catch (error) {
       toast.error("Error al eliminar el perfume");
       console.error(error);
@@ -39,7 +39,18 @@ const HomePage = () => {
   const handleEdit = (perfume) => {
     navigate(`/editPerfume/${perfume._id}`);
   };
-
+  const filteredPerfumes = perfumes.filter((perfume) =>
+          perfume.title.toLowerCase().includes(search.toLowerCase())
+    ); 
+   
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center mt-20">
+        <span className="loading loading-spinner loading-lg text-accent"></span>
+      </div>
+    );
+  }
+     
   if (loading) {
     return (
       <div className="flex justify-center items-center mt-20">
@@ -59,9 +70,20 @@ const HomePage = () => {
     );
   }
 
-  return (
+    return (
+  <div>
+    <div className="mb-6">
+      <input
+        type="text"
+        placeholder="Buscar perfume..."
+        className="input input-bordered w-full"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+    </div>
+
     <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 mt-14 xl:grid-cols-[repeat(auto-fit,minmax(350px,1fr))]">
-      {perfumes.map((perfume) => (
+      {filteredPerfumes.map((perfume) => (
         <CardPerfume
           key={perfume._id}
           perfume={perfume}
@@ -70,7 +92,8 @@ const HomePage = () => {
         />
       ))}
     </div>
-  );
+  </div>
+);
 };
 
 export default HomePage;

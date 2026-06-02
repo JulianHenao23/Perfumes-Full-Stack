@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-
 const PerfumeForm = ({ onSubmit, initialData, isEditing }) => {
-  const [formData, setFormData] = useState({
+   const [formData, setFormData] = useState({
     title: "",
     description: "",
     imageUrl: "",
   });
 
-  // Si viene con datos (modo editar), los carga en el formulario
+  // Si viene con datos los carga en el formulario
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -68,5 +67,8 @@ const PerfumeForm = ({ onSubmit, initialData, isEditing }) => {
     </form>
   );
 };
+
+
+
 
 export default PerfumeForm;
