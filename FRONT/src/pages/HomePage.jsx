@@ -25,16 +25,24 @@ import perfumeService from "../services/perfumeService";
     fetchPerfumes();
   }, []);
 
-  const handleDelete = async (id) => {
-    try {
-      await perfumeService.delete(id);
-      toast.success("Perfume eliminado correctamente");
-      fetchPerfumes(); //  esto recargaa la lista
-    } catch (error) {
-      toast.error("Error al eliminar el perfume");
-      console.error(error);
-    }
-  };
+ const handleDelete = async (id) => {
+  const confirmDelete = window.confirm(
+    "¿Estás seguro de que deseas eliminar este perfume?"
+  );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+    await perfumeService.delete(id);
+    toast.success("Perfume eliminado correctamente");
+    fetchPerfumes();
+  } catch (error) {
+    toast.error("Error al eliminar el perfume");
+    console.error(error);
+  }
+};
 
   const handleEdit = (perfume) => {
     navigate(`/editPerfume/${perfume._id}`);
